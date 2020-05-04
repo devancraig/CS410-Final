@@ -97,13 +97,13 @@ public class commands {
         }
     }
     
-        public static void addAssignment(Connection conn, String name, String category, String desc, int points) {
+    public static void addAssignment(Connection conn, String name, String category, String desc, int points) {
 
         PreparedStatement stmt = null;
         ResultSet rs = null;
-        int class_id = 0;
 
         try {
+
             Statement stmt1 = conn.createStatement();
             ResultSet rs1 = stmt1.executeQuery(String.format("SELECT * FROM categories " +
                                            "WHERE class_id =  %d "  +
@@ -111,15 +111,56 @@ public class commands {
             while (rs1.next()) {
                 int cat_id = rs1.getInt("cat_id");
                 System.out.println(cat_id);
-                stmt = conn.prepareStatement("call addassignment(?,?,?,?,?)");
+                stmt = conn.prepareStatement("call addassignment(?,?,?,?)");
                 stmt.setInt(1, cat_id);
-                stmt.setInt(2, class_id);
-                stmt.setString(3, name);
-                stmt.setString(4, desc);
-                stmt.setInt(5, points);
+                stmt.setString(2, name);
+                stmt.setString(3, desc);
+                stmt.setInt(4, points);
                 rs = stmt.executeQuery();
                 // Now do something with the ResultSet ....
             }
+
+        } catch (SQLException ex) {
+            // handle any errors
+            System.err.println("SQLException: " + ex.getMessage());
+            System.err.println("SQLState: " + ex.getSQLState());
+            System.err.println("VendorError: " + ex.getErrorCode());
+        } finally {
+            // it is a good idea to release resources in a finally{} block
+            // in reverse-order of their creation if they are no-longer needed
+            if (rs != null) {
+                try {
+                    rs.close();
+                } catch (SQLException sqlEx) {
+                } // ignore
+                rs = null;
+            }
+            if (stmt != null) {
+                try {
+                    stmt.close();
+                } catch (SQLException sqlEx) {
+                } // ignore
+                stmt = null;
+            }
+        }
+    }
+    
+    public static void addCategory(Connection conn, String name, Double weight) {
+
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+        int class_id = showClassId();
+
+        try {
+
+                System.out.println(class_id);
+                stmt = conn.prepareStatement("call addcategories(?,?,?)");
+                stmt.setInt(1, class_id);
+                stmt.setString(2, name);
+                stmt.setDouble(3, weight);
+                rs = stmt.executeQuery();
+                // Now do something with the ResultSet ....
+
 
         } catch (SQLException ex) {
             // handle any errors
@@ -556,6 +597,9 @@ public class commands {
             } else if (args[0].equals("add-assignment")) {
                 System.out.println("Adding an assignment");
                 addAssignment(conn, args[1], args[2], args[3], Integer.parseInt(args[4]));   
+            } else if (args[0].equals("add-category")) {
+                System.out.println("Adding a category");
+                addCategory(conn, args[1], Double.parseDouble(args[2]));   
             } else if (args[0].equals("select-class")) {
                 System.out.println("Selecting a class");
                 if (args.length == 4) {
