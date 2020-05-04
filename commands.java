@@ -4,10 +4,12 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.io.*;
 
 public class commands {
 
     public static String currentClass = "";
+    public static String classTextFile = "/home/TANNERHALCUMB/cs410/final/currentClass.txt";
 
 
     public static void newClass(Connection conn, String cnum, String term, int snum, String desc) {
@@ -241,6 +243,22 @@ public class commands {
             if (size == 1) {
                 currentClass = courseNumber;
                 System.out.println("Current class: " + currentClass);
+                
+
+
+                try{
+                  File file = new File(classTextFile);
+
+                  FileWriter fw = new FileWriter(file.getAbsoluteFile());
+                  BufferedWriter bw = new BufferedWriter(fw);
+                  bw.write(currentClass);
+                  bw.close();
+
+                  }catch(IOException e){
+                    e.printStackTrace();
+                  }
+
+                
             } else {
                 System.out.println("Not distinct class.");
             }
@@ -271,6 +289,24 @@ public class commands {
         }
     }
     
+    public static void showClass() {
+    
+    try {
+      File file = new File(classTextFile); 
+  
+      BufferedReader br = new BufferedReader(new FileReader(file));
+    
+      String currClass; 
+      while ((currClass = br.readLine()) != null) 
+          System.out.println("Current class: " + currClass); 
+          currentClass = currClass;
+        }
+        catch(Exception e){
+          System.out.println("No current class available.");
+        }
+      
+    }
+    
     
 
     public static void main(String[] args) {
@@ -294,7 +330,7 @@ public class commands {
                 System.out.println("Adding a student");
                 addStudent(conn, args[1], Integer.parseInt(args[2]), args[3], args[4]);
             } else if (args[0].equals("select-class")) {
-                System.out.println("Selecting class");
+                System.out.println("Selecting a class");
                 if (args.length == 4) {
                     selectClass3(conn, args[1], args[2], Integer.parseInt(args[3]));
                 } else if (args.length == 3) {
@@ -303,7 +339,11 @@ public class commands {
                     selectClass1(conn, args[1]);
                 }
 
+            } else if (args[0].equals("show-class")) {
+                System.out.println("Showing current class");
+                showClass();
             }
+              
 
         } catch (Exception ex) {
             // handle the error
