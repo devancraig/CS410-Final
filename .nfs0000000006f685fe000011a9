@@ -57,61 +57,17 @@ public class commands {
         int class_id = 0;
 
         try {
-
-            class_id = showClassId();
-            stmt = conn.prepareStatement("call addstudent(?,?,?,?,?)");
-            stmt.setString(1, uname);
-            stmt.setInt(2, sID);
-            stmt.setString(3, last);
-            stmt.setString(4, first);
-            stmt.setInt(5, class_id);
-            rs = stmt.executeQuery();
-            // Now do something with the ResultSet ....
-
-        } catch (SQLException ex) {
-            // handle any errors
-            System.err.println("SQLException: " + ex.getMessage());
-            System.err.println("SQLState: " + ex.getSQLState());
-            System.err.println("VendorError: " + ex.getErrorCode());
-        } finally {
-            // it is a good idea to release resources in a finally{} block
-            // in reverse-order of their creation if they are no-longer needed
-            if (rs != null) {
-                try {
-                    rs.close();
-                } catch (SQLException sqlEx) {
-                } // ignore
-                rs = null;
-            }
-            if (stmt != null) {
-                try {
-                    stmt.close();
-                } catch (SQLException sqlEx) {
-                } // ignore
-                stmt = null;
-            }
-        }
-    }
-
-    public static void addAssignment(Connection conn, String name, String category, String desc, int points) {
-
-        PreparedStatement stmt = null;
-        ResultSet rs = null;
-
-        try {
-
             Statement stmt1 = conn.createStatement();
-            ResultSet rs1 = stmt1.executeQuery(
-                    String.format("SELECT * FROM categories " + "WHERE class_id =  %d " + " AND NAME LIKE '%%%s%%'; ",
-                            showClassId(), category));
+            ResultSet rs1 = stmt1.executeQuery("SELECT class_id FROM class WHERE term LIKE '%Sp%20%';");
             while (rs1.next()) {
-                int cat_id = rs1.getInt("cat_id");
-                System.out.println(cat_id);
-                stmt = conn.prepareStatement("call addassignment(?,?,?,?)");
-                stmt.setInt(1, cat_id);
-                stmt.setString(2, name);
-                stmt.setString(3, desc);
-                stmt.setInt(4, points);
+                class_id = rs1.getInt("class_id");
+                System.out.println(class_id);
+                stmt = conn.prepareStatement("call addstudent(?,?,?,?,?)");
+                stmt.setString(1, uname);
+                stmt.setInt(2, sID);
+                stmt.setString(3, last);
+                stmt.setString(4, first);
+                stmt.setInt(5, class_id);
                 rs = stmt.executeQuery();
                 // Now do something with the ResultSet ....
             }
@@ -140,22 +96,30 @@ public class commands {
             }
         }
     }
-
-    public static void addCategory(Connection conn, String name, Double weight) {
+    
+        public static void addAssignment(Connection conn, String name, String category, String desc, int points) {
 
         PreparedStatement stmt = null;
         ResultSet rs = null;
-        int class_id = showClassId();
+        int class_id = 0;
 
         try {
-
-            System.out.println(class_id);
-            stmt = conn.prepareStatement("call addcategories(?,?,?)");
-            stmt.setInt(1, class_id);
-            stmt.setString(2, name);
-            stmt.setDouble(3, weight);
-            rs = stmt.executeQuery();
-            // Now do something with the ResultSet ....
+            Statement stmt1 = conn.createStatement();
+            ResultSet rs1 = stmt1.executeQuery(String.format("SELECT * FROM categories " +
+                                           "WHERE class_id =  %d "  +
+                                            " AND NAME LIKE '%%%s%%'; ", showClassId(), category));
+            while (rs1.next()) {
+                int cat_id = rs1.getInt("cat_id");
+                System.out.println(cat_id);
+                stmt = conn.prepareStatement("call addassignment(?,?,?,?,?)");
+                stmt.setInt(1, cat_id);
+                stmt.setInt(2, class_id);
+                stmt.setString(3, name);
+                stmt.setString(4, desc);
+                stmt.setInt(5, points);
+                rs = stmt.executeQuery();
+                // Now do something with the ResultSet ....
+            }
 
         } catch (SQLException ex) {
             // handle any errors
@@ -200,6 +164,7 @@ public class commands {
 
             String courseNumber = "";
             int size = 0;
+            
 
             // iterate through the java resultset
             while (s.next()) {
@@ -426,24 +391,26 @@ public class commands {
     }
 
     public static int showClassId() {
-        String c_id = "0";
+        String c_id = "0"; 
         try {
-            File file = new File(classTextFile);
-
+            File file = new File(classTextFile); 
+        
             BufferedReader br = new BufferedReader(new FileReader(file));
-
+          
             String classID;
-
-            while ((classID = br.readLine()) != null)
-                // System.out.println("Current class: " + currClass);
+            
+            while ((classID = br.readLine()) != null) 
+                //System.out.println("Current class: " + currClass); 
                 c_id = classID;
-        } catch (Exception e) {
-            System.out.println("No current class available.");
-        }
-
-        return Integer.parseInt(c_id);
+              }
+              catch(Exception e){
+                System.out.println("No current class available.");
+              }
+              
+            return Integer.parseInt(c_id);
 
     }
+
 
     public static void showCategories(Connection conn) {
         String query = String.format(
@@ -470,54 +437,6 @@ public class commands {
             }
         } catch (Exception e) {
             e.printStackTrace();
-        }
-
-    }
-
-    public static void showAssignments(Connection conn) {
-
-        PreparedStatement stmt = null;
-        ResultSet s = null;
-
-        try {
-            stmt = conn.prepareStatement("call showassignments(?)");
-            stmt.setString(1, showClass());
-            s = stmt.executeQuery();
-
-            String courseNumber = "";
-
-            // iterate through the java resultset
-            while (s.next()) {
-                String assignName = s.getString("name");
-                String description = s.getString("description");
-                String pv = s.getString("point_value");
-                String cat = s.getString("category");
-
-                System.out.println("Assignment: " + assignName + ", Categories: " + cat +", Description: " + description + ", Point Value: " + pv);
-            }
-
-        } catch (SQLException ex) {
-            // handle any errors
-            System.err.println("SQLException: " + ex.getMessage());
-            System.err.println("SQLState: " + ex.getSQLState());
-            System.err.println("VendorError: " + ex.getErrorCode());
-        } finally {
-            // it is a good idea to release resources in a finally{} block
-            // in reverse-order of their creation if they are no-longer needed
-            if (s != null) {
-                try {
-                    s.close();
-                } catch (SQLException sqlEx) {
-                } // ignore
-                s = null;
-            }
-            if (stmt != null) {
-                try {
-                    stmt.close();
-                } catch (SQLException sqlEx) {
-                } // ignore
-                stmt = null;
-            }
         }
 
     }
@@ -637,10 +556,7 @@ public class commands {
                 addStudent(conn, args[1], Integer.parseInt(args[2]), args[3], args[4]);
             } else if (args[0].equals("add-assignment")) {
                 System.out.println("Adding an assignment");
-                addAssignment(conn, args[1], args[2], args[3], Integer.parseInt(args[4]));
-            } else if (args[0].equals("add-category")) {
-                System.out.println("Adding a category");
-                addCategory(conn, args[1], Double.parseDouble(args[2]));
+                addAssignment(conn, args[1], args[2], args[3], Integer.parseInt(args[4]));   
             } else if (args[0].equals("select-class")) {
                 System.out.println("Selecting a class");
                 if (args.length == 4) {
@@ -655,16 +571,11 @@ public class commands {
                 System.out.println("Showing Current Class: " + showClass());
             } else if (args[0].equals("show-classid")) {
                 System.out.println("Showing Class id: " + showClassId());
-            } else if (args[0].equals("show-categories")) {
-                System.out.println("Class: " + showClass());
+            }
+            else if (args[0].equals("show-categories")) {
                 System.out.println("Showing Class Categories: ");
                 showCategories(conn);
-            } else if (args[0].equals("show-assignment")){
-                System.out.println("Class: " + showClass());
-                System.out.println("Showing Assignments: ");
-                showAssignments(conn);
-            } 
-            else if (args[0].equals("show-students")) {
+            } else if (args[0].equals("show-students")) {
                 System.out.println("Current Class Students: ");
                 if (args.length == 1) {
                     showStudents(conn);
@@ -674,7 +585,7 @@ public class commands {
             } else if (args[0].equals("list-classes")) {
                 System.out.println("Listing Classes: \n");
                 listClasses(conn);
-            } 
+            }
 
         } catch (Exception ex) {
             // handle the error

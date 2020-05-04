@@ -82,7 +82,28 @@ Delimiter ;
 */
 
 
+delimiter //
+
+CREATE PROCEDURE showassignments (c VARCHAR(250))
+BEGIN
+	SELECT assignments.name, assignments.description, assignments.point_value, categories.name AS category FROM assignments
+	left JOIN categories ON assignments.cat_id = categories.cat_id
+	LEFT JOIN class ON categories.class_id = class.class_id
+	WHERE class.course_number = c
+	GROUP BY categories.name;
+END //
+
+Delimiter ; 
+
+
+
+
 -- CALL addstudent('devancraig', 1242, 'devan', 'devan', 21);
+SELECT assignments.name, assignments.description, assignments.point_value, categories.name AS category FROM assignments
+left JOIN categories ON assignments.cat_id = categories.cat_id
+LEFT JOIN class ON categories.class_id = class.class_id
+WHERE class.course_number = 'CS455'
+GROUP BY categories.name;
 
 SELECT * FROM categories;
 select * from assignments;
