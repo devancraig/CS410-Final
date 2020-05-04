@@ -115,6 +115,7 @@ public class commands {
 
             String courseNumber = "";
             int size = 0;
+            
 
             // iterate through the java resultset
             while (s.next()) {
