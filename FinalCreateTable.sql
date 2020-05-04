@@ -10,7 +10,7 @@ DROP TABLE categories;
 drop table class;
 */
 
-/*
+
 create table class (
 	class_id int primary KEY AUTO_INCREMENT not null,
     course_number varchar(10),
@@ -18,37 +18,31 @@ create table class (
     section_number int,
     description text
 );
-  
+ 
 create table categories (
-	 cat_id int not null,
+	 cat_id int primary KEY AUTO_INCREMENT not null,
     class_id int not null,
     name varchar(20),
     weight float,
-    PRIMARY KEY(cat_id),
     foreign key (class_id)
 		references class(class_id)
 );
-*/
-    
+
+   
 create table assignments (
-	 assign_id int not null,
-    cat_id int not null,
-    class_id INT NOT NULL,
+	 assign_id int primary KEY AUTO_INCREMENT not null, 
+	 cat_id INT NOT NULL,
     name varchar(250),
     description text,
-    point_value FLOAT,
-    
-	PRIMARY KEY(assign_id),
-   INDEX (cat_id),
-   INDEX (class_id),
+    point_value int,
+   
+	INDEX (cat_id),
     
 	foreign key (cat_id)
-		references categories(cat_id),
-	foreign key (class_id)
-		references class(class_id)
+		references categories(cat_id)
 );
 
-/*
+
 create table students (
 	s_id int primary KEY AUTO_INCREMENT not NULL,
     class_id INT not null,
@@ -76,7 +70,7 @@ create table grades (
 		references students(s_id)
 
 );
-*/
+
 
 
 select * from grades;

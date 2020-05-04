@@ -57,20 +57,32 @@ Delimiter ;
 
 */
 
+
 /*
 delimiter //
 
-CREATE PROCEDURE addAssignment ()
+CREATE PROCEDURE addassignment (c_id int, n VARCHAR(250), descript TEXT, pv FLOAT)
 BEGIN
-	INSERT INTO students (username, StudentID, lastname, firstname, class_id) VALUES (uname, sID, l, f, cID);
+	INSERT INTO assignments(cat_id, NAME, description, point_value) VALUES (c_id, n, descript, pv);
 END //
 
 Delimiter ; 
 */
 
+/*
+delimiter //
+
+CREATE PROCEDURE addcategories (c_id INT, n VARCHAR(250), w float)
+BEGIN
+	INSERT INTO categories(class_id, NAME, weight) VALUES (c_id, n, w);
+END //
+
+Delimiter ; 
+
+*/
+
 
 -- CALL addstudent('devancraig', 1242, 'devan', 'devan', 21);
-SELECT class_id FROM class WHERE term LIKE '%Sp%20%';
 
 SELECT * FROM categories;
 select * from assignments;
