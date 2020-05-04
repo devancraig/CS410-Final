@@ -9,8 +9,7 @@ import java.io.*;
 public class commands {
 
     public static String currentClass = "";
-    public static String classTextFile = "/home/TANNERHALCUMB/cs410/final/currentClass.txt";
-
+    public static String classTextFile = "currentClass.txt";
 
     public static void newClass(Connection conn, String cnum, String term, int snum, String desc) {
 
@@ -37,13 +36,15 @@ public class commands {
             if (rs != null) {
                 try {
                     rs.close();
-                } catch (SQLException sqlEx) {} // ignore
+                } catch (SQLException sqlEx) {
+                } // ignore
                 rs = null;
             }
             if (stmt != null) {
                 try {
                     stmt.close();
-                } catch (SQLException sqlEx) {} // ignore
+                } catch (SQLException sqlEx) {
+                } // ignore
                 stmt = null;
             }
         }
@@ -82,13 +83,15 @@ public class commands {
             if (rs != null) {
                 try {
                     rs.close();
-                } catch (SQLException sqlEx) {} // ignore
+                } catch (SQLException sqlEx) {
+                } // ignore
                 rs = null;
             }
             if (stmt != null) {
                 try {
                     stmt.close();
-                } catch (SQLException sqlEx) {} // ignore
+                } catch (SQLException sqlEx) {
+                } // ignore
                 stmt = null;
             }
         }
@@ -101,10 +104,8 @@ public class commands {
         int class_id = 0;
 
         try {
-            String query = String.format("SELECT * FROM class " +
-                "WHERE course_number like '%s'" +
-                "AND term LIKE '%s'" +
-                "AND section_number LIKE '%d' ;", courseNum, term, sectionNum);
+            String query = String.format("SELECT * FROM class " + "WHERE course_number like '%s'" + "AND term LIKE '%s'"
+                    + "AND section_number LIKE '%d' ;", courseNum, term, sectionNum);
 
             // create the java statement
             Statement st = conn.createStatement();
@@ -118,28 +119,31 @@ public class commands {
             // iterate through the java resultset
             while (s.next()) {
                 courseNumber = s.getString("course_number");
+                class_id = s.getInt("class_id");
                 size++;
             }
 
             if (size == 1) {
                 currentClass = courseNumber;
                 System.out.println("Current class: " + currentClass);
-                
-                                try{
-                  File file = new File(classTextFile);
+                System.out.println("Class ID: " + class_id);
 
-                  FileWriter fw = new FileWriter(file.getAbsoluteFile());
-                  BufferedWriter bw = new BufferedWriter(fw);
-                  bw.write(currentClass);
-                  bw.close();
+                try {
+                    File file = new File(classTextFile);
 
-                  }catch(IOException e){
+                    FileWriter fw = new FileWriter(file.getAbsoluteFile());
+                    BufferedWriter bw = new BufferedWriter(fw);
+                    bw.write(currentClass + "\n");
+                    bw.write(Integer.toString(class_id));
+                    bw.close();
+
+                } catch (IOException e) {
                     e.printStackTrace();
-                  }
-            } else {
-                System.out.println("Class unable to be located.");
-            }
+                }
 
+            } else {
+                System.out.println("Not distinct class.");
+            }
 
             conn.close();
 
@@ -154,19 +158,20 @@ public class commands {
             if (rs != null) {
                 try {
                     rs.close();
-                } catch (SQLException sqlEx) {} // ignore
+                } catch (SQLException sqlEx) {
+                } // ignore
                 rs = null;
             }
             if (stmt != null) {
                 try {
                     stmt.close();
-                } catch (SQLException sqlEx) {} // ignore
+                } catch (SQLException sqlEx) {
+                } // ignore
                 stmt = null;
             }
         }
     }
-    
-    
+
     public static void selectClass2(Connection conn, String courseNum, String term) {
 
         PreparedStatement stmt = null;
@@ -174,9 +179,8 @@ public class commands {
         int class_id = 0;
 
         try {
-            String query = String.format("SELECT * FROM class " +
-                "WHERE course_number like '%s'" +
-                "AND term LIKE '%s'; ", courseNum, term);
+            String query = String.format(
+                    "SELECT * FROM class " + "WHERE course_number like '%s'" + "AND term LIKE '%s'; ", courseNum, term);
 
             // create the java statement
             Statement st = conn.createStatement();
@@ -190,28 +194,31 @@ public class commands {
             // iterate through the java resultset
             while (s.next()) {
                 courseNumber = s.getString("course_number");
+                class_id = s.getInt("class_id");
                 size++;
             }
 
             if (size == 1) {
                 currentClass = courseNumber;
                 System.out.println("Current class: " + currentClass);
-                
-                                try{
-                  File file = new File(classTextFile);
+                System.out.println("Class ID: " + class_id);
 
-                  FileWriter fw = new FileWriter(file.getAbsoluteFile());
-                  BufferedWriter bw = new BufferedWriter(fw);
-                  bw.write(currentClass);
-                  bw.close();
+                try {
+                    File file = new File(classTextFile);
 
-                  }catch(IOException e){
+                    FileWriter fw = new FileWriter(file.getAbsoluteFile());
+                    BufferedWriter bw = new BufferedWriter(fw);
+                    bw.write(currentClass + "\n");
+                    bw.write(Integer.toString(class_id));
+                    bw.close();
+
+                } catch (IOException e) {
                     e.printStackTrace();
-                  }
+                }
+
             } else {
                 System.out.println("Not distinct class.");
             }
-
 
             conn.close();
 
@@ -226,19 +233,20 @@ public class commands {
             if (rs != null) {
                 try {
                     rs.close();
-                } catch (SQLException sqlEx) {} // ignore
+                } catch (SQLException sqlEx) {
+                } // ignore
                 rs = null;
             }
             if (stmt != null) {
                 try {
                     stmt.close();
-                } catch (SQLException sqlEx) {} // ignore
+                } catch (SQLException sqlEx) {
+                } // ignore
                 stmt = null;
             }
         }
     }
-    
-    
+
     public static void selectClass1(Connection conn, String courseNum) {
 
         PreparedStatement stmt = null;
@@ -246,8 +254,7 @@ public class commands {
         int class_id = 0;
 
         try {
-            String query = String.format("SELECT * FROM class " +
-                "WHERE course_number like '%s'; ", courseNum);
+            String query = String.format("SELECT * FROM class " + "WHERE course_number like '%s'; ", courseNum);
 
             // create the java statement
             Statement st = conn.createStatement();
@@ -261,32 +268,31 @@ public class commands {
             // iterate through the java resultset
             while (s.next()) {
                 courseNumber = s.getString("course_number");
+                class_id = s.getInt("class_id");
                 size++;
             }
 
             if (size == 1) {
                 currentClass = courseNumber;
                 System.out.println("Current class: " + currentClass);
-                
+                System.out.println("Class ID: " + class_id);
 
+                try {
+                    File file = new File(classTextFile);
 
-                try{
-                  File file = new File(classTextFile);
+                    FileWriter fw = new FileWriter(file.getAbsoluteFile());
+                    BufferedWriter bw = new BufferedWriter(fw);
+                    bw.write(currentClass + "\n");
+                    bw.write(Integer.toString(class_id));
+                    bw.close();
 
-                  FileWriter fw = new FileWriter(file.getAbsoluteFile());
-                  BufferedWriter bw = new BufferedWriter(fw);
-                  bw.write(currentClass);
-                  bw.close();
-
-                  }catch(IOException e){
+                } catch (IOException e) {
                     e.printStackTrace();
-                  }
+                }
 
-                
             } else {
                 System.out.println("Not distinct class.");
             }
-
 
             conn.close();
 
@@ -301,45 +307,67 @@ public class commands {
             if (rs != null) {
                 try {
                     rs.close();
-                } catch (SQLException sqlEx) {} // ignore
+                } catch (SQLException sqlEx) {
+                } // ignore
                 rs = null;
             }
             if (stmt != null) {
                 try {
                     stmt.close();
-                } catch (SQLException sqlEx) {} // ignore
+                } catch (SQLException sqlEx) {
+                } // ignore
                 stmt = null;
             }
         }
     }
-    
+
     public static String showClass() {
-    
-    try {
-      File file = new File(classTextFile); 
-  
-      BufferedReader br = new BufferedReader(new FileReader(file));
-    
-      String currClass; 
-      while ((currClass = br.readLine()) != null) 
-          //System.out.println("Current class: " + currClass); 
-          currentClass = currClass;
+
+        try {
+            File file = new File(classTextFile);
+
+            BufferedReader br = new BufferedReader(new FileReader(file));
+
+            String currClass;
+            if ((currClass = br.readLine()) != null)
+                // System.out.println("Current class: " + currClass);
+                currentClass = currClass;
+        } catch (Exception e) {
+            System.out.println("No current class available.");
         }
-        catch(Exception e){
-          System.out.println("No current class available.");
-        }
-        
-      return currentClass;
-      
-      
+
+        return currentClass;
+
     }
-    
+
+    public static int showClassId() {
+        String c_id = "0"; 
+        try {
+            File file = new File(classTextFile); 
+        
+            BufferedReader br = new BufferedReader(new FileReader(file));
+          
+            String classID;
+            
+            while ((classID = br.readLine()) != null) 
+                //System.out.println("Current class: " + currClass); 
+                c_id = classID;
+              }
+              catch(Exception e){
+                System.out.println("No current class available.");
+              }
+              
+            return Integer.parseInt(c_id);
+
+    }
+
+
     public static void showCategories(Connection conn) {
-            String query = String.format("SELECT categories.name, categories.weight FROM categories "
-                  + "left join class "
-                  + "on categories.class_id = class.class_id "
-                  + "where class.course_number = '%s';", showClass());
-    try {
+        String query = String.format(
+                "SELECT categories.name, categories.weight FROM categories " + "left join class "
+                        + "on categories.class_id = class.class_id " + "where class.course_number = '%s';",
+                showClass());
+        try {
             // create the java statement
             Statement st = conn.createStatement();
 
@@ -353,23 +381,20 @@ public class commands {
             while (s.next()) {
                 String catName = s.getString("name");
                 String weight = s.getString("weight");
-                
+
                 System.out.println("Category: " + catName + " , Weight: " + weight);
                 size++;
             }
-      }
-      catch(Exception e){
-                    e.printStackTrace();
-                  }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
     }
-    
+
     public static void showStudents(Connection conn) {
-            String query = String.format("SELECT * from students "
-                  + "left join class "
-                  + "on students.class_id = class.class_id "
-                  + "where class.course_number = '%s';", showClass());
-    try {
+        String query = String.format("SELECT * from students " + "left join class "
+                + "on students.class_id = class.class_id " + "where class.course_number = '%s';", showClass());
+        try {
             // create the java statement
             Statement st = conn.createStatement();
 
@@ -386,25 +411,23 @@ public class commands {
                 String firstName = s.getString("firstname");
                 String lastName = s.getString("lastname");
                 String studentID = s.getString("StudentID");
-                
+
                 System.out.println(courseNum + "\t" + username + "\t" + firstName + "\t" + lastName + "\t" + studentID);
                 size++;
             }
-      }
-      catch(Exception e){
-                    e.printStackTrace();
-                  }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
     }
-    
+
     public static void showStudents(Connection conn, String search) {
-    
-            String query = String.format("SELECT * from students "
-                  + "left join class "
-                  + "on students.class_id = class.class_id "
-                  + "where class.course_number = '%s' "
-                  + "AND students.username like '%%%s%%'", showClass(), search);
-    try {
+
+        String query = String.format(
+                "SELECT * from students " + "left join class " + "on students.class_id = class.class_id "
+                        + "where class.course_number = '%s' " + "AND students.username like '%%%s%%'",
+                showClass(), search);
+        try {
             // create the java statement
             Statement st = conn.createStatement();
 
@@ -421,24 +444,21 @@ public class commands {
                 String firstName = s.getString("firstname");
                 String lastName = s.getString("lastname");
                 String studentID = s.getString("StudentID");
-                
+
                 System.out.println(courseNum + "\t" + username + "\t" + firstName + "\t" + lastName + "\t" + studentID);
                 size++;
             }
-      }
-      catch(Exception e){
-                    e.printStackTrace();
-                  }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
     }
-    
+
     public static void listClasses(Connection conn) {
-    
-            String query = "SELECT course_number, count(*) FROM class "
-                                  + "left join students "
-                                  + "on class.class_id = students.class_id "
-                                  + "group by course_number; " ;
-    try {
+
+        String query = "SELECT course_number, count(*) FROM class " + "left join students "
+                + "on class.class_id = students.class_id " + "group by course_number; ";
+        try {
             // create the java statement
             Statement st = conn.createStatement();
 
@@ -453,24 +473,24 @@ public class commands {
             while (s.next()) {
                 String courseNum = s.getString("course_number");
                 int stuCount = s.getInt("count(*)");
-                
+
                 System.out.println(courseNum + "\t\t\t" + stuCount);
                 size++;
             }
-      }
-      catch(Exception e){
-                    e.printStackTrace();
-                  }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
     }
-    
+
     public static void main(String[] args) {
         Connection conn = null;
 
         try {
             // The newInstance() call is a work around for some broken Java implementations
             Class.forName("com.mysql.jdbc.Driver");
-            conn = DriverManager.getConnection("jdbc:mysql://us-cdbr-east-06.cleardb.net:3306/heroku_ffcbf3ee2ade5c2?sslmode=require&user=b6956053778dcf&password=1d34da0b");
+            conn = DriverManager.getConnection(
+                    "jdbc:mysql://us-cdbr-east-06.cleardb.net:3306/heroku_ffcbf3ee2ade5c2?sslmode=require&user=b6956053778dcf&password=1d34da0b");
             if (args.length == 0) {
                 System.out.println("Usage :   new-class course_number term section_number description");
                 System.out.println("Usage :   show-class");
@@ -496,21 +516,23 @@ public class commands {
 
             } else if (args[0].equals("show-class")) {
                 System.out.println("Showing Current Class: " + showClass());
-            } else if (args[0].equals("show-categories")) {
+            } else if (args[0].equals("show-classid")) {
+                System.out.println("Showing Class id: " + showClassId());
+            }
+            else if (args[0].equals("show-categories")) {
                 System.out.println("Showing Class Categories: ");
                 showCategories(conn);
             } else if (args[0].equals("show-students")) {
                 System.out.println("Current Class Students: ");
                 if (args.length == 1) {
-                  showStudents(conn);
+                    showStudents(conn);
                 } else if (args.length == 2) {
-                  showStudents(conn, args[1]);
+                    showStudents(conn, args[1]);
                 }
             } else if (args[0].equals("list-classes")) {
                 System.out.println("Listing Classes: \n");
                 listClasses(conn);
             }
-              
 
         } catch (Exception ex) {
             // handle the error
