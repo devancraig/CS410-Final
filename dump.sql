@@ -57,6 +57,17 @@ Delimiter ;
 
 */
 
+/*
+delimiter //
+
+CREATE PROCEDURE addAssignment ()
+BEGIN
+	INSERT INTO students (username, StudentID, lastname, firstname, class_id) VALUES (uname, sID, l, f, cID);
+END //
+
+Delimiter ; 
+*/
+
 
 -- CALL addstudent('devancraig', 1242, 'devan', 'devan', 21);
 SELECT class_id FROM class WHERE term LIKE '%Sp%20%';

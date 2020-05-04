@@ -464,8 +464,6 @@ public class commands {
 
     }
     
-    
-
     public static void main(String[] args) {
         Connection conn = null;
 
