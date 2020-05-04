@@ -361,10 +361,40 @@ public class commands {
       catch(Exception e){
                     e.printStackTrace();
                   }
+
+    }
     
-    
-    
-    
+    public static void showStudents(Connection conn) {
+            String query = String.format("SELECT * from students "
+                  + "left join class "
+                  + "on students.class_id = class.class_id "
+                  + "where class.course_number = '%s';", showClass());
+    try {
+            // create the java statement
+            Statement st = conn.createStatement();
+
+            // execute the query, and get a java resultset
+            ResultSet s = st.executeQuery(query);
+
+            String courseNumber = "";
+            int size = 0;
+
+            // iterate through the java resultset
+            while (s.next()) {
+                String courseNum = s.getString("course_number");
+                String username = s.getString("username");
+                String firstName = s.getString("firstname");
+                String lastName = s.getString("lastname");
+                String studentID = s.getString("StudentID");
+                
+                System.out.println(courseNum + "\t" + username + "\t" + firstName + "\t" + lastName + "\t" + studentID);
+                size++;
+            }
+      }
+      catch(Exception e){
+                    e.printStackTrace();
+                  }
+
     }
     
     
@@ -378,8 +408,8 @@ public class commands {
             conn = DriverManager.getConnection("jdbc:mysql://us-cdbr-east-06.cleardb.net:3306/heroku_ffcbf3ee2ade5c2?sslmode=require&user=b6956053778dcf&password=1d34da0b");
             if (args.length == 0) {
                 System.out.println("Usage :   new-class course_number term section_number description");
-                System.out.println("Usage :   ");
-                System.out.println("Usage :   ");
+                System.out.println("Usage :   show-class");
+                System.out.println("Usage :   show-categories");
                 return;
             }
 
@@ -402,8 +432,11 @@ public class commands {
             } else if (args[0].equals("show-class")) {
                 System.out.println("Showing Current Class: " + showClass());
             } else if (args[0].equals("show-categories")) {
-                System.out.println("Showing Class Categories");
+                System.out.println("Showing Class Categories: ");
                 showCategories(conn);
+            } else if (args[0].equals("show-students")) {
+                System.out.println("Current Class Students: ");
+                showStudents(conn);
             }
               
 
