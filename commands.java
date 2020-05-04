@@ -403,7 +403,7 @@ public class commands {
                   + "left join class "
                   + "on students.class_id = class.class_id "
                   + "where class.course_number = '%s' "
-                  + "AND students.firstname like '%%%s%%'", showClass(), search);
+                  + "AND students.username like '%%%s%%'", showClass(), search);
     try {
             // create the java statement
             Statement st = conn.createStatement();
@@ -423,6 +423,38 @@ public class commands {
                 String studentID = s.getString("StudentID");
                 
                 System.out.println(courseNum + "\t" + username + "\t" + firstName + "\t" + lastName + "\t" + studentID);
+                size++;
+            }
+      }
+      catch(Exception e){
+                    e.printStackTrace();
+                  }
+
+    }
+    
+    public static void listClasses(Connection conn) {
+    
+            String query = "SELECT course_number, count(*) FROM class "
+                                  + "left join students "
+                                  + "on class.class_id = students.class_id "
+                                  + "group by course_number; " ;
+    try {
+            // create the java statement
+            Statement st = conn.createStatement();
+
+            // execute the query, and get a java resultset
+            ResultSet s = st.executeQuery(query);
+
+            String courseNumber = "";
+            int size = 0;
+            System.out.println("Class:" + "\t\t" + "# Students:");
+
+            // iterate through the java resultset
+            while (s.next()) {
+                String courseNum = s.getString("course_number");
+                int stuCount = s.getInt("count(*)");
+                
+                System.out.println(courseNum + "\t\t\t" + stuCount);
                 size++;
             }
       }
@@ -476,6 +508,9 @@ public class commands {
                 } else if (args.length == 2) {
                   showStudents(conn, args[1]);
                 }
+            } else if (args[0].equals("list-classes")) {
+                System.out.println("Listing Classes: \n");
+                listClasses(conn);
             }
               
 
