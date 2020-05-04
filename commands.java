@@ -96,6 +96,55 @@ public class commands {
             }
         }
     }
+    
+        public static void addAssignment(Connection conn, String name, String category, String desc, int points) {
+
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+        int class_id = 0;
+
+        try {
+            Statement stmt1 = conn.createStatement();
+            ResultSet rs1 = stmt1.executeQuery(String.format("SELECT * FROM categories " +
+                                           "WHERE class_id =  %d "  +
+                                            " AND NAME LIKE '%%%s%%'; ", showClassId(), category));
+            while (rs1.next()) {
+                int cat_id = rs1.getInt("cat_id");
+                System.out.println(cat_id);
+                stmt = conn.prepareStatement("call addassignment(?,?,?,?,?)");
+                stmt.setInt(1, cat_id);
+                stmt.setInt(2, class_id);
+                stmt.setString(3, name);
+                stmt.setString(4, desc);
+                stmt.setInt(5, points);
+                rs = stmt.executeQuery();
+                // Now do something with the ResultSet ....
+            }
+
+        } catch (SQLException ex) {
+            // handle any errors
+            System.err.println("SQLException: " + ex.getMessage());
+            System.err.println("SQLState: " + ex.getSQLState());
+            System.err.println("VendorError: " + ex.getErrorCode());
+        } finally {
+            // it is a good idea to release resources in a finally{} block
+            // in reverse-order of their creation if they are no-longer needed
+            if (rs != null) {
+                try {
+                    rs.close();
+                } catch (SQLException sqlEx) {
+                } // ignore
+                rs = null;
+            }
+            if (stmt != null) {
+                try {
+                    stmt.close();
+                } catch (SQLException sqlEx) {
+                } // ignore
+                stmt = null;
+            }
+        }
+    }
 
     public static void selectClass3(Connection conn, String courseNum, String term, int sectionNum) {
 
@@ -505,6 +554,9 @@ public class commands {
             } else if (args[0].equals("add-student")) {
                 System.out.println("Adding a student");
                 addStudent(conn, args[1], Integer.parseInt(args[2]), args[3], args[4]);
+            } else if (args[0].equals("add-assignment")) {
+                System.out.println("Adding an assignment");
+                addAssignment(conn, args[1], args[2], args[3], Integer.parseInt(args[4]));   
             } else if (args[0].equals("select-class")) {
                 System.out.println("Selecting a class");
                 if (args.length == 4) {
