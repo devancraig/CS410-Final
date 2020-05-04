@@ -124,6 +124,18 @@ public class commands {
             if (size == 1) {
                 currentClass = courseNumber;
                 System.out.println("Current class: " + currentClass);
+                
+                                try{
+                  File file = new File(classTextFile);
+
+                  FileWriter fw = new FileWriter(file.getAbsoluteFile());
+                  BufferedWriter bw = new BufferedWriter(fw);
+                  bw.write(currentClass);
+                  bw.close();
+
+                  }catch(IOException e){
+                    e.printStackTrace();
+                  }
             } else {
                 System.out.println("Class unable to be located.");
             }
@@ -184,6 +196,18 @@ public class commands {
             if (size == 1) {
                 currentClass = courseNumber;
                 System.out.println("Current class: " + currentClass);
+                
+                                try{
+                  File file = new File(classTextFile);
+
+                  FileWriter fw = new FileWriter(file.getAbsoluteFile());
+                  BufferedWriter bw = new BufferedWriter(fw);
+                  bw.write(currentClass);
+                  bw.close();
+
+                  }catch(IOException e){
+                    e.printStackTrace();
+                  }
             } else {
                 System.out.println("Not distinct class.");
             }
@@ -289,7 +313,7 @@ public class commands {
         }
     }
     
-    public static void showClass() {
+    public static String showClass() {
     
     try {
       File file = new File(classTextFile); 
@@ -298,13 +322,49 @@ public class commands {
     
       String currClass; 
       while ((currClass = br.readLine()) != null) 
-          System.out.println("Current class: " + currClass); 
+          //System.out.println("Current class: " + currClass); 
           currentClass = currClass;
         }
         catch(Exception e){
           System.out.println("No current class available.");
         }
+        
+      return currentClass;
       
+      
+    }
+    
+    public static void showCategories(Connection conn) {
+            String query = String.format("SELECT categories.name, categories.weight FROM categories "
+                  + "left join class "
+                  + "on categories.class_id = class.class_id "
+                  + "where class.course_number = '%s';", showClass());
+    try {
+            // create the java statement
+            Statement st = conn.createStatement();
+
+            // execute the query, and get a java resultset
+            ResultSet s = st.executeQuery(query);
+
+            String courseNumber = "";
+            int size = 0;
+
+            // iterate through the java resultset
+            while (s.next()) {
+                String catName = s.getString("name");
+                String weight = s.getString("weight");
+                
+                System.out.println("Category: " + catName + " , Weight: " + weight);
+                size++;
+            }
+      }
+      catch(Exception e){
+                    e.printStackTrace();
+                  }
+    
+    
+    
+    
     }
     
     
@@ -340,8 +400,10 @@ public class commands {
                 }
 
             } else if (args[0].equals("show-class")) {
-                System.out.println("Showing current class");
-                showClass();
+                System.out.println("Showing Current Class: " + showClass());
+            } else if (args[0].equals("show-categories")) {
+                System.out.println("Showing Class Categories");
+                showCategories(conn);
             }
               
 
