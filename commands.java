@@ -224,6 +224,7 @@ public class commands {
         }
     }
 
+
     public static void selectClass3(Connection conn, String courseNum, String term, int sectionNum) {
 
         PreparedStatement stmt = null;

@@ -82,6 +82,7 @@ Delimiter ;
 */
 
 
+/*
 delimiter //
 
 CREATE PROCEDURE showassignments (c VARCHAR(250))
@@ -94,16 +95,33 @@ BEGIN
 END //
 
 Delimiter ; 
+*/
 
+/*
+delimiter //
 
+CREATE PROCEDURE getcatid (n VARCHAR(250), c_id INT)
+BEGIN
+	SELECT ca.cat_id FROM assignments a
+	LEFT JOIN categories ca ON a.cat_id = ca.cat_id
+	LEFT JOIN class c ON ca.class_id = c.class_id
+	WHERE a.NAME = n AND c.class_id = c_id;
+END //
 
+Delimiter ; 
+*/
 
--- CALL addstudent('devancraig', 1242, 'devan', 'devan', 21);
-SELECT assignments.name, assignments.description, assignments.point_value, categories.name AS category FROM assignments
-left JOIN categories ON assignments.cat_id = categories.cat_id
-LEFT JOIN class ON categories.class_id = class.class_id
-WHERE class.course_number = 'CS455'
-GROUP BY categories.name;
+/*
+delimiter //
+
+CREATE PROCEDURE addgrade (a_id INT, sID INT, l VARCHAR(250), g float)
+BEGIN
+	INSERT INTO grades(assign_id, s_id, letter, grade) VALUES (a_id, sID, l, g);
+END //
+
+Delimiter ; 
+*/
+
 
 SELECT * FROM categories;
 select * from assignments;
