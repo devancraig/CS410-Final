@@ -182,6 +182,48 @@ public class commands {
         }
     }
 
+    public static void addGrade(Connection conn, String assignName, String username, String grade) {
+
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+        int class_id = showClassId();
+
+        try {
+
+                System.out.println(class_id);
+                stmt = conn.prepareStatement("call addgrade(?,?,?)");
+                stmt.setInt(1, class_id);
+                stmt.setString(2, assignName);
+                stmt.setString(3, username);
+                rs = stmt.executeQuery();
+                // Now do something with the ResultSet ....
+
+
+        } catch (SQLException ex) {
+            // handle any errors
+            System.err.println("SQLException: " + ex.getMessage());
+            System.err.println("SQLState: " + ex.getSQLState());
+            System.err.println("VendorError: " + ex.getErrorCode());
+        } finally {
+            // it is a good idea to release resources in a finally{} block
+            // in reverse-order of their creation if they are no-longer needed
+            if (rs != null) {
+                try {
+                    rs.close();
+                } catch (SQLException sqlEx) {
+                } // ignore
+                rs = null;
+            }
+            if (stmt != null) {
+                try {
+                    stmt.close();
+                } catch (SQLException sqlEx) {
+                } // ignore
+                stmt = null;
+            }
+        }
+    }
+
     public static void selectClass3(Connection conn, String courseNum, String term, int sectionNum) {
 
         PreparedStatement stmt = null;
@@ -641,7 +683,10 @@ public class commands {
             } else if (args[0].equals("add-category")) {
                 System.out.println("Adding a category");
                 addCategory(conn, args[1], Double.parseDouble(args[2]));
-            } else if (args[0].equals("select-class")) {
+            } else if (args[0].equals("add-grade")) {
+                System.out.println("Adding a grade");
+                addGrade(conn, args[1], args[2], args[3]);   
+            }  else if (args[0].equals("select-class")) {
                 System.out.println("Selecting a class");
                 if (args.length == 4) {
                     selectClass3(conn, args[1], args[2], Integer.parseInt(args[3]));
