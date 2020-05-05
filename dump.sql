@@ -1,40 +1,4 @@
 
-/* add a class
-INSERT INTO class (course_number, term, section_number, description) VALUES ('CS 410/510', 'Spring', 001, 'Foundations of database management systems. Database models: relational, object and others. Database design: entity-relationship modeling, logical relational schema design, physical design, functional dependencies and normalization, and database tuning. Database application development using database interfaces embedded in host languages.');
-*/
-
-/* add students
-INSERT INTO students (student_id, class_id, username, NAME) VALUES (1, 11, 'devancraig', 'Devan Craig');
-INSERT INTO students (student_id, class_id, username, NAME) VALUES (2, 11, 'tannerhalcumb', 'Tanner Halcumb');
-*/
-
-
- /* add categories
-INSERT INTO categories (cat_id, class_id, NAME, weight) VALUES (1, 11, 'Exams', 30); 
-INSERT INTO categories (cat_id, class_id, NAME, weight) VALUES (2, 11, 'Final', 20);
-INSERT INTO categories (cat_id, class_id, NAME, weight) VALUES (3, 11, 'Homework', 35);
-INSERT INTO categories (cat_id, class_id, NAME, weight) VALUES (4, 11, 'Final Project', 15);
-*/
-
-
-/* add assignments
-INSERT INTO assignments (assign_id, class_id, cat_id, NAME, description, point_value) VALUES (1, 3, 'Assignment 1', 'A bike shop needs a database to manage their sales of parts and service. Here are some of the things they need to track', 100);
-INSERT INTO assignments (assign_id, class_id, cat_id, NAME, description, point_value) VALUES (2, 1, 'Midterm 1', 'Transactions', 100);
-*/
-
-
-/* add grades
-INSERT INTO grades (grade_id, assign_id, student_id, letter, grade) VALUES (1, 1, 1, 'A', 95);
-INSERT INTO grades (grade_id, assign_id, student_id, letter, grade) VALUES (2, 2, 1, 'B', 81);
-INSERT INTO grades (grade_id, assign_id, student_id, letter, grade) VALUES (3, 1, 2, 'A', 99);
-INSERT INTO grades (grade_id, assign_id, student_id, letter, grade) VALUES (4, 2, 2, 'B', 84);
-*/
-
-
-
-
-
-/*
 delimiter //
 
 CREATE PROCEDURE newclass (cnum varchar(10), t varchar(10), snum INT, descript TEXT)
@@ -43,9 +7,9 @@ BEGIN
 END //
 
 Delimiter ; 
-*/
 
-/*
+
+
 delimiter //
 
 CREATE PROCEDURE addstudent (uname VARCHAR(250), sID INT, l VARCHAR(250), f VARCHAR(250), cID INT)
@@ -55,10 +19,10 @@ END //
 
 Delimiter ; 
 
-*/
 
 
-/*
+
+
 delimiter //
 
 CREATE PROCEDURE addassignment (c_id int, n VARCHAR(250), descript TEXT, pv FLOAT)
@@ -67,9 +31,9 @@ BEGIN
 END //
 
 Delimiter ; 
-*/
 
-/*
+
+
 delimiter //
 
 CREATE PROCEDURE addcategories (c_id INT, n VARCHAR(250), w float)
@@ -79,10 +43,10 @@ END //
 
 Delimiter ; 
 
-*/
 
 
-/*
+
+
 delimiter //
 
 CREATE PROCEDURE showassignments (c VARCHAR(250))
@@ -95,9 +59,9 @@ BEGIN
 END //
 
 Delimiter ; 
-*/
 
-/*
+
+
 delimiter //
 
 CREATE PROCEDURE getassignid (n VARCHAR(250), c_id INT)
@@ -109,9 +73,9 @@ BEGIN
 END //
 
 Delimiter ; 
-*/
 
-/*
+
+
 delimiter //
 
 CREATE PROCEDURE addgrade (a_id INT, sID INT, l VARCHAR(250), g float)
@@ -120,9 +84,9 @@ BEGIN
 END //
 
 Delimiter ; 
-*/
 
-/*
+
+
 delimiter //
 
 CREATE PROCEDURE studentgrade (uname VARCHAR(250), c_id INT)
@@ -137,8 +101,8 @@ BEGIN
 END //
 
 Delimiter ; 
-*/
-/*
+
+
 CREATE VIEW finalgradebook AS 
 SELECT  
 	catName,
@@ -147,51 +111,25 @@ SELECT
 	((SUM(grade) / SUM(point_value)) * weight) AS total
  FROM student_grades
  GROUP BY catName;
- */
- 
- -- SELECT SUM(total) AS Grades FROM finalgradebook;
  
  
-SELECT ca.name AS catName,a.name AS assignName, ca.weight, a.point_value, g.grade, s.class_id FROM students s
-LEFT JOIN class c ON s.class_id = c.class_id
-LEFT JOIN categories ca ON s.class_id = ca.class_id
-LEFT JOIN assignments a ON ca.cat_id = a.cat_id
-LEFT JOIN grades g ON a.assign_id = g.assign_id
-GROUP BY ca.name;
- 
+
+
+ delimiter //
+
+CREATE PROCEDURE studentfinalgrade (c_id INT)
+BEGIN
+		SELECT  
+		catName,
+		SUM(point_value) AS pv,
+		SUM(grade) AS grade,
+		((SUM(grade) / SUM(point_value)) * weight) AS total
+	 FROM igrades
+	 WHERE class_id = c_id
+	 GROUP BY catName;
+END //
+
+Delimiter ; 
 
 
 
-
-SELECT * FROM categories;
-select * from assignments;
-select * from grades;
-select * from students;
-select * from class;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/*
-SELECT * FROM class c
-LEFT JOIN students s ON c.class_id = s.class_id
-*/
