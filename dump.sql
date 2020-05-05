@@ -100,9 +100,9 @@ Delimiter ;
 /*
 delimiter //
 
-CREATE PROCEDURE getcatid (n VARCHAR(250), c_id INT)
+CREATE PROCEDURE getassignid (n VARCHAR(250), c_id INT)
 BEGIN
-	SELECT ca.cat_id FROM assignments a
+	SELECT a.assign_id FROM assignments a
 	LEFT JOIN categories ca ON a.cat_id = ca.cat_id
 	LEFT JOIN class c ON ca.class_id = c.class_id
 	WHERE a.NAME = n AND c.class_id = c_id;
@@ -122,12 +122,75 @@ END //
 Delimiter ; 
 */
 
+/*
+delimiter //
+
+CREATE PROCEDURE studentgrade (uname VARCHAR(250), c_id INT)
+BEGIN
+	SELECT ca.name AS catName,a.name AS assignName, ca.weight, a.point_value, g.grade FROM students s
+	LEFT JOIN class c ON s.class_id = c.class_id
+	LEFT JOIN categories ca ON s.class_id = ca.class_id
+	LEFT JOIN assignments a ON ca.cat_id = a.cat_id
+	LEFT JOIN grades g ON a.assign_id = g.assign_id
+	WHERE s.username = uname AND ca.class_id = c_id 
+	GROUP BY ca.name;
+END //
+
+Delimiter ; 
+*/
+/*
+CREATE VIEW finalgradebook AS 
+SELECT  
+	catName,
+	SUM(point_value) AS pv,
+	SUM(grade) AS grade,
+	((SUM(grade) / SUM(point_value)) * weight) AS total
+ FROM student_grades
+ GROUP BY catName;
+ */
+ 
+ -- SELECT SUM(total) AS Grades FROM finalgradebook;
+ 
+ 
+SELECT ca.name AS catName,a.name AS assignName, ca.weight, a.point_value, g.grade, s.class_id FROM students s
+LEFT JOIN class c ON s.class_id = c.class_id
+LEFT JOIN categories ca ON s.class_id = ca.class_id
+LEFT JOIN assignments a ON ca.cat_id = a.cat_id
+LEFT JOIN grades g ON a.assign_id = g.assign_id
+GROUP BY ca.name;
+ 
+
+
+
 
 SELECT * FROM categories;
 select * from assignments;
 select * from grades;
 select * from students;
 select * from class;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 /*
 SELECT * FROM class c
 LEFT JOIN students s ON c.class_id = s.class_id
